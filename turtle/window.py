@@ -168,8 +168,8 @@ class TurtleWindow(Handy.ApplicationWindow):
             "Please choose an executable",
             self,
             Gtk.FileChooserAction.OPEN,
-            #_("_Select"),
-            #_("_Cancel"),
+            # _("_Select"),
+            # _("_Cancel"),
         )
 
         dialog.add_buttons(_("_Cancel"),
@@ -225,11 +225,16 @@ class TurtleWindow(Handy.ApplicationWindow):
         )
 
     def icon_select_clicked(self, button: Gtk.Button) -> None:
-        dialog = Gtk.FileChooserNative.new(
+        dialog = Gtk.FileChooserDialog(
             title="Please choose an icon file",
             parent=self,
             action=Gtk.FileChooserAction.OPEN,
         )
+
+        dialog.add_buttons(_("_Cancel"),
+                           Gtk.ResponseType.CANCEL,
+                           _("_Select"),
+                           Gtk.ResponseType.ACCEPT)
 
         response = dialog.run()
         if response == Gtk.ResponseType.ACCEPT:
