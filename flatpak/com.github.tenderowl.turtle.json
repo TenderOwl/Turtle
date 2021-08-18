@@ -56,7 +56,7 @@
             "sources" : [
                 {
                     "type" : "git",
-                    "git" : "https://github.com/TenderOwl/Turtle/"
+                    "url" : "https://github.com/TenderOwl/Turtle/"
                 }
             ]
         }
