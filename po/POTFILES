@@ -1,0 +1,7 @@
+data/com.github.tenderowl.turtle.desktop.in
+data/com.github.tenderowl.turtle.appdata.xml.in
+data/com.github.tenderowl.turtle.gschema.xml
+src/window.ui
+src/main.py
+src/window.py
+

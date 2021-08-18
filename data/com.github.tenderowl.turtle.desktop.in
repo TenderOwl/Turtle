@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=turtle
+Exec=turtle
+Icon=com.github.tenderowl.turtle
+Terminal=false
+Type=Application
+Categories=GTK;
+StartupNotify=true

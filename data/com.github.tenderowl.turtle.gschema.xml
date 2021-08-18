@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist gettext-domain="turtle">
+	<schema id="com.github.tenderowl.turtle" path="/com/github/tenderowl/turtle/">
+	</schema>
+</schemalist>
