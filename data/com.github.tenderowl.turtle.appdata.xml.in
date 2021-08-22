@@ -6,7 +6,7 @@
     <name>Turtle</name>
     <summary>Add any app to the App Menu</summary>
     <description>
-        <p>Instantly add downloaded application to the App Menu. Event AppImage.
+        <p>Turtle lets you add any launcherless applications to the App Menu - even AppImages.
         </p>
     </description>
 
@@ -24,7 +24,7 @@
     <releases>
         <release version="1.0.0" timestamp="1629132395" date="2021-16-08">
             <description>
-                <p>Launch release. Turtle is ready to serve and help you to add applications to App Menu.
+                <p>Turtle is ready to serve and help you to add applications to App Menu.
                 </p>
             </description>
         </release>
