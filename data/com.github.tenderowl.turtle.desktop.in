@@ -1,5 +1,5 @@
 [Desktop Entry]
-Name=turtle
+Name=Turtle
 Exec=turtle
 Icon=com.github.tenderowl.turtle
 Terminal=false
