@@ -4,9 +4,9 @@
     <metadata_license>CC0-1.0</metadata_license>
     <project_license>MIT</project_license>
     <name>Turtle</name>
-    <summary>Add any app to the App Menu</summary>
+    <summary>Add apps to the Applications Menu</summary>
     <description>
-        <p>Turtle lets you add any launcherless applications to the App Menu - even AppImages.
+        <p>Add any launcherless applications to the Applications Menu—even AppImages or downloaded binaries. Just open Turtle, navigate to the app, and select a name and image to show in the Applications Menu.
         </p>
     </description>
 
