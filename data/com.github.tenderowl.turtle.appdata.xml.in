@@ -31,7 +31,7 @@
     </releases>
 
     <developer_name>Tender Owl</developer_name>
-    <launchable type="desktop-id">@appid@.desktop</launchable>
+    <launchable type="desktop-id">com.github.tenderowl.turtle.desktop</launchable>
     <url type="homepage">https://tenderowl.com/work/turtle</url>
     <url type="bugtracker">https://github.com/tenderowl/turtle/issues</url>
     <url type="help">https://github.com/tenderowl/turtle/issues</url>
