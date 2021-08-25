@@ -114,7 +114,7 @@ class TurtleWindow(Handy.ApplicationWindow):
         """Collect data for the .desktop and call `self.make_desktop_file`"""
         name = self.name_entry.get_text()
         icon_path = self.icon_entry.get_text()
-        exec_path = self.exec_entry.get_text()
+        exec_path = f'"{self.exec_entry.get_text()}"'
         terminal = self.terminal_entry.get_active()
 
         self.make_desktop_file(
@@ -164,6 +164,8 @@ class TurtleWindow(Handy.ApplicationWindow):
 
     def get_exec_file(self) -> Optional[str]:
         exec_path: str = None
+
+        # @TODO: Wait till FileChooserNative will give real path, not /var/run/1000
         dialog = Gtk.FileChooserDialog(
             "Please choose an executable",
             self,
