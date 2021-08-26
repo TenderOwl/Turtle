@@ -28,3 +28,5 @@
 
 APP_ID = "com.github.tenderowl.turtle"
 RESOURCE_PREFIX = "/com/github/tenderowl/turtle"
+
+APPS_PATH_PREFIX = "~/.local/share/applications/"

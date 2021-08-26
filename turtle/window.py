@@ -30,11 +30,12 @@ import os
 from typing import Optional
 
 from gi.overrides.GdkPixbuf import Pixbuf
-from gi.repository import Gtk, Gdk, Granite, Handy
+from gi.repository import Gtk, Gdk, Granite, Handy, Gio
 
 from gettext import gettext as _
 
-from turtle.config import RESOURCE_PREFIX
+from turtle.config import RESOURCE_PREFIX, APPS_PATH_PREFIX
+from turtle.widgets.app_list_row import AppListRow, AppData
 
 
 @Gtk.Template(resource_path="/com/github/tenderowl/turtle/ui/window.ui")
@@ -42,6 +43,8 @@ class TurtleWindow(Handy.ApplicationWindow):
     __gtype_name__ = "TurtleWindow"
 
     main_box: Gtk.Box = Gtk.Template.Child()
+    pages_switcher: Gtk.Stack = Gtk.Template.Child()
+    pages: Gtk.Stack = Gtk.Template.Child()
     screens: Gtk.Stack = Gtk.Template.Child()
     header_bar = Gtk.Template.Child()
     overlay: Gtk.Overlay = Gtk.Template.Child()
@@ -54,6 +57,7 @@ class TurtleWindow(Handy.ApplicationWindow):
     icon_select_btn: Gtk.Button = Gtk.Template.Child()
     exec_entry: Gtk.Entry = Gtk.Template.Child()
     terminal_entry: Gtk.CheckButton = Gtk.Template.Child()
+    apps_listbox: Gtk.ListBox = Gtk.Template.Child()
     toast: Granite.WidgetsToast = Granite.WidgetsToast()
 
     # Path to selected executable
@@ -80,6 +84,10 @@ class TurtleWindow(Handy.ApplicationWindow):
         self.select_button.connect("clicked", self.select_button_clicked)
         self.make_button.connect("clicked", self.make_button_clicked)
         self.icon_select_btn.connect("clicked", self.icon_select_clicked)
+
+        self.apps_store = Gio.ListStore()
+        self.apps_listbox.bind_model(self.apps_store, AppListRow)
+        self.pages.connect("notify::visible-child", self.page_changed)
 
         self.drop_area.drag_dest_set(Gtk.DestDefaults.ALL,
                                      [Gtk.TargetEntry.new('URI', Gtk.TargetFlags.OTHER_APP, 1)],
@@ -109,6 +117,7 @@ class TurtleWindow(Handy.ApplicationWindow):
         self.screens.set_visible_child_name("setup_screen")
         # Activate back button
         self.back_button.set_visible(True)
+        self.pages_switcher.set_sensitive(False)
 
     def make_button_clicked(self, button: Gtk.Button) -> None:
         """Collect data for the .desktop and call `self.make_desktop_file`"""
@@ -150,7 +159,7 @@ class TurtleWindow(Handy.ApplicationWindow):
         )
 
         self.desktop_file_path = os.path.expanduser(
-            f"~/.local/share/applications/{name}.desktop"
+            f"{APPS_PATH_PREFIX}{name}.desktop"
         )
 
         with open(self.desktop_file_path, "w") as desktop_file:
@@ -161,6 +170,7 @@ class TurtleWindow(Handy.ApplicationWindow):
     def back_button_clicked(self, button: Gtk.Button) -> None:
         self.screens.set_visible_child_name("select_screen")
         self.back_button.set_visible(False)
+        self.pages_switcher.set_sensitive(True)
 
     def get_exec_file(self) -> Optional[str]:
         exec_path: str = None
@@ -261,3 +271,14 @@ class TurtleWindow(Handy.ApplicationWindow):
         print(data)
         print(info)
         print(time)
+
+    def page_changed(self, stack: Gtk.Stack, arg):
+        print('page_changed')
+        if self.pages.get_visible_child_name() == 'installed_apps':
+            self.load_available_apps()
+
+    def load_available_apps(self):
+        apps_folder = os.path.expanduser(APPS_PATH_PREFIX)
+        for file in sorted(os.listdir(apps_folder)):
+            if file.endswith(".desktop"):
+                self.apps_store.append(AppData(os.path.join(apps_folder, file)))
