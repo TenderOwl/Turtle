@@ -26,7 +26,7 @@
     </screenshots>
 
     <releases>
-        <release version="1.1.0" timestamp="1630067556" date="2021-27-08">
+        <release version="0.1.5" timestamp="1630132049"  date="2021-08-28">
             <description>
                 <p>You can add new apps to the app menu or control visibility of added earlier.
                 </p>
@@ -35,7 +35,7 @@
     </releases>
 
     <releases>
-        <release version="1.0.0" timestamp="1629132395" date="2021-16-08">
+        <release version="0.1.0" timestamp="1629132395" date="2021-08-16">
             <description>
                 <p>Turtle is ready to serve and help you to add applications to App Menu.
                 </p>
