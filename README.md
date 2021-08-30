@@ -9,7 +9,8 @@ The only purpose of a byte-sized application is to help you create .desktop entr
 As of usual with elementary OS in mind. 😎
 
 <div align=center>
-![turtle-screenshot](https://user-images.githubusercontent.com/519146/131096932-46d3ed3b-5fb5-4f19-88f2-40254de6429f.png)
+  
+  <img src="data/images/turtle-screenshot-2.png" alt="Turtle in action"/>
 
 </div>
 
