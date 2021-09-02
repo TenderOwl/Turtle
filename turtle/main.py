@@ -56,13 +56,13 @@ class Application(Gtk.Application):
 
         self.window: TurtleWindow = None
 
-        self.add_main_option("name", b"n",
+        self.add_main_option("title", b"t",
                              GLib.OptionFlags.NONE, GLib.OptionArg.STRING,
                              "app name in the AppMenu", None)
         self.add_main_option("icon", b"i",
                              GLib.OptionFlags.NONE, GLib.OptionArg.STRING,
                              "icon name or path", None)
-        self.add_main_option("terminal", b"t",
+        self.add_main_option("terminal", b"c",
                              GLib.OptionFlags.NONE, GLib.OptionArg.NONE,
                              "open in terminal", None)
 
@@ -84,7 +84,7 @@ class Application(Gtk.Application):
         self.window.present()
 
     def do_handle_local_options(self, options: GLib.VariantDict) -> int:
-        _app_name = options.lookup_value("name", GLib.VariantType("s"))
+        _app_name = options.lookup_value("title", GLib.VariantType("s"))
         self.app_name = _app_name.get_string() if _app_name else ""
         _app_icon = options.lookup_value("icon", GLib.VariantType("s"))
         self.app_icon = _app_icon.get_string() if _app_icon else ""

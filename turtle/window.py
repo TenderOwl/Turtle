@@ -239,8 +239,8 @@ class TurtleWindow(Handy.ApplicationWindow):
             [
                 "[Desktop Entry]",
                 "Encoding=UTF-8",
-                f"Version={app_version}",
                 "Type=Application",
+                f"Version={app_version}",
                 f"Terminal={terminal}",
                 f"Exec={exec_path}",
                 f"Name={name}",
