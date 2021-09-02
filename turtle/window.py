@@ -61,8 +61,11 @@ class TurtleWindow(Handy.ApplicationWindow):
     toast: Granite.WidgetsToast = Granite.WidgetsToast()
 
     # Path to selected executable
-    exec_path = ""
-    desktop_file_path = None
+    exec_path: str = ""
+    app_name: str = ""
+    app_icon: str = ""
+    app_terminal: bool = False
+    desktop_file_path: str = None
 
     def __init__(self, **kwargs):
         # Don't forget to initialize Handy!
@@ -101,18 +104,22 @@ class TurtleWindow(Handy.ApplicationWindow):
         if not self.exec_path:
             return
 
+        self.switch_to_setup()
+
+    def switch_to_setup(self):
         # Try to detect java apps
         if self.exec_path.endswith('.jar'):
             self.exec_path = f"java -jar {self.exec_path}"
 
         # Prepare Setup Screen widgets
         self.name_entry.set_text(
-            os.path.splitext(os.path.basename(self.exec_path))[0].capitalize()
+            self.app_name or os.path.splitext(os.path.basename(self.exec_path))[0].capitalize()
         )
         self.exec_entry.set_text(self.exec_path)
-        self.icon_entry.set_text("")
-        self.terminal_entry.set_active(False)
+        self.icon_entry.set_text(self.app_icon)
+        self.terminal_entry.set_active(self.app_terminal)
         self.name_entry.grab_focus()
+
         # Switch screens
         self.screens.set_visible_child_name("setup_screen")
         # Activate back button
@@ -171,6 +178,10 @@ class TurtleWindow(Handy.ApplicationWindow):
         self.screens.set_visible_child_name("select_screen")
         self.back_button.set_visible(False)
         self.pages_switcher.set_sensitive(True)
+        # Reset app data
+        self.app_name = ""
+        self.app_icon = ""
+        self.app_terminal = False
 
     def get_exec_file(self) -> Optional[str]:
         exec_path: str = None
