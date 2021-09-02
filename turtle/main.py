@@ -33,21 +33,39 @@ gi.require_version('Gtk', '3.0')
 gi.require_version('Granite', '1.0')
 gi.require_version('Handy', '1')
 
-from gi.repository import Gtk, Gio
+from gi.repository import Gtk, Gio, Granite
 
 from .window import TurtleWindow
 
 
 class Application(Gtk.Application):
+    granite_settings: Granite.Settings
+    gtk_settings: Gtk.Settings
+
     def __init__(self):
         super().__init__(application_id='com.github.tenderowl.turtle',
                          flags=Gio.ApplicationFlags.FLAGS_NONE)
 
     def do_activate(self):
+        self.granite_settings = Granite.Settings.get_default()
+        self.gtk_settings = Gtk.Settings.get_default()
+
+        # Then, we check if the user's preference is for the dark style and set it if it is
+        self.gtk_settings.props.gtk_application_prefer_dark_theme = \
+            self.granite_settings.props.prefers_color_scheme == Granite.SettingsColorScheme.DARK
+
+        # Finally, we listen to changes in Granite.Settings and update our app if the user changes their preference
+        self.granite_settings.connect("notify::prefers-color-scheme",
+                                      self.color_scheme_changed)
+
         win = self.props.active_window
         if not win:
             win = TurtleWindow(application=self)
         win.present()
+
+    def color_scheme_changed(self, _old, _new):
+        self.gtk_settings.props.gtk_application_prefer_dark_theme = \
+            self.granite_settings.props.prefers_color_scheme == Granite.SettingsColorScheme.DARK
 
 
 def main(version):
