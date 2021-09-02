@@ -27,6 +27,7 @@
 # authorization.
 
 import os
+import stat
 from contextlib import suppress
 from typing import Optional
 from urllib.parse import unquote, urlparse
@@ -131,7 +132,7 @@ class TurtleWindow(Handy.ApplicationWindow):
         """Collect data for the .desktop and call `self.make_desktop_file`"""
         name = self.name_entry.get_text()
         icon_path = self.icon_entry.get_text()
-        exec_path = f'"{self.exec_entry.get_text()}"'
+        exec_path = self.exec_entry.get_text()
         terminal = self.terminal_entry.get_active()
 
         self.make_desktop_file(
@@ -158,6 +159,9 @@ class TurtleWindow(Handy.ApplicationWindow):
             Entries that confirm with this version of the specification should use 1.5.
             Note that the version field is not required to be present.
         """
+        if not self.configure_permission(exec_path):
+            return
+
         desktop_data = self.make_a_desktop(
             name=name,
             exec_path=exec_path,
@@ -174,6 +178,29 @@ class TurtleWindow(Handy.ApplicationWindow):
             desktop_file.writelines(desktop_data)
             desktop_file.flush()
             self.send_notification(f"{name} menu item created!")
+
+    def configure_permission(self, path):
+        success = True
+        if not os.access(path, os.X_OK):
+            success = False
+            dlg: Granite.MessageDialog = Granite.MessageDialog.with_image_from_icon_name(
+                "Configure permission to execute",
+                "In order for this application to be launched from the menu, we need to set the execution permission.",
+                "dialog-question",
+                Gtk.ButtonsType.CANCEL
+            )
+            apply_btn: Gtk.Button = dlg.add_button("Set Executable", Gtk.ResponseType.APPLY)
+            apply_btn.get_style_context().add_class(Gtk.STYLE_CLASS_SUGGESTED_ACTION)
+            # dlg.add_button("Cancel", Gtk.ResponseType.CANCEL)
+
+            response = dlg.run()
+            if response == Gtk.ResponseType.APPLY:
+                os.chmod(path, stat.S_IRWXU | stat.S_IRWXG | stat.S_IROTH)
+                success = True
+
+            dlg.destroy()
+
+        return success
 
     def back_button_clicked(self, button: Gtk.Button) -> None:
         self.screens.set_visible_child_name("select_screen")
@@ -242,7 +269,7 @@ class TurtleWindow(Handy.ApplicationWindow):
                 "Type=Application",
                 f"Version={app_version}",
                 f"Terminal={terminal}",
-                f"Exec={exec_path}",
+                f"Exec=\"{exec_path}\"",
                 f"Name={name}",
                 f"Icon={icon_path}",
             ]
@@ -293,7 +320,6 @@ class TurtleWindow(Handy.ApplicationWindow):
         Gtk.drag_finish(context, success, success, time)
 
     def page_changed(self, stack: Gtk.Stack, arg):
-        print('page_changed')
         if self.pages.get_visible_child_name() == 'installed_apps':
             self.load_available_apps()
 
