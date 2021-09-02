@@ -27,10 +27,12 @@
 # authorization.
 
 import os
+from contextlib import suppress
 from typing import Optional
+from urllib.parse import unquote, urlparse
 
 from gi.overrides.GdkPixbuf import Pixbuf
-from gi.repository import Gtk, Gdk, Granite, Handy, Gio
+from gi.repository import Gtk, Gdk, Granite, Handy, Gio, GLib
 
 from gettext import gettext as _
 
@@ -92,10 +94,9 @@ class TurtleWindow(Handy.ApplicationWindow):
         self.apps_listbox.bind_model(self.apps_store, AppListRow)
         self.pages.connect("notify::visible-child", self.page_changed)
 
-        self.drop_area.drag_dest_set(Gtk.DestDefaults.ALL,
-                                     [Gtk.TargetEntry.new('URI', Gtk.TargetFlags.OTHER_APP, 1)],
-                                     Gdk.DragAction.COPY)
-        self.drop_area.drag_dest_set(Gtk.DestDefaults.ALL, [], Gdk.DragAction.COPY)
+        # Init drag-n-drop
+        drop_target = Gtk.TargetEntry.new('text/uri-list', Gtk.TargetFlags.OTHER_APP, 0)
+        self.drop_area.drag_dest_set(Gtk.DestDefaults.ALL, (drop_target,), Gdk.DragAction.MOVE)
         self.drop_area.connect("drag-data-received", self.drag_data_received)
 
     def select_button_clicked(self, button: Gtk.Button) -> None:
@@ -277,11 +278,19 @@ class TurtleWindow(Handy.ApplicationWindow):
         print(f'Removing {self.desktop_file_path}')
         os.remove(self.desktop_file_path)
 
-    def drag_data_received(self, widget, drag_context, x, y, data, info, time) -> None:
-        print(drag_context)
-        print(data)
-        print(info)
-        print(time)
+    def drag_data_received(self, widget, context: Gdk.DragContext,
+                           x: int, y: int,
+                           data: Gtk.SelectionData,
+                           info: int, time: int) -> None:
+        success = False
+        uris = data.get_uris()
+        if uris:
+            exec_path = urlparse(uris[0])
+            print('drop data', uris[0])
+            self.exec_path = unquote(exec_path.path)
+            self.switch_to_setup()
+            success = True
+        Gtk.drag_finish(context, success, success, time)
 
     def page_changed(self, stack: Gtk.Stack, arg):
         print('page_changed')

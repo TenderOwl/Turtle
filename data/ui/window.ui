@@ -84,7 +84,7 @@
                                 <property name="focus-on-click">False</property>
                                 <property name="can-default">True</property>
                                 <property name="receives-default">True</property>
-                                <property name="tooltip-markup" translatable="yes">Select the desired application file</property>
+                                <property name="tooltip-markup" translatable="yes">&lt;b&gt;Select&lt;/b&gt; the desired application file or &lt;b&gt;drop&lt;/b&gt; it here</property>
                                 <property name="margin-start">8</property>
                                 <property name="margin-end">8</property>
                                 <property name="margin-top">8</property>
@@ -108,8 +108,8 @@
                                 <property name="can-focus">False</property>
                                 <property name="margin-start">8</property>
                                 <property name="margin-end">8</property>
-                                <property name="margin-bottom">8</property>
-                                <property name="label" translatable="yes">Select the desired application file</property>
+                                <property name="margin-bottom">16</property>
+                                <property name="label" translatable="yes">&lt;b&gt;Select&lt;/b&gt; the desired application file or &lt;b&gt;drop&lt;/b&gt; it here</property>
                                 <property name="use-markup">True</property>
                               </object>
                               <packing>
