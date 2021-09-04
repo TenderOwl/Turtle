@@ -28,12 +28,11 @@
 
 import os
 import stat
-from contextlib import suppress
 from typing import Optional
 from urllib.parse import unquote, urlparse
 
 from gi.overrides.GdkPixbuf import Pixbuf
-from gi.repository import Gtk, Gdk, Granite, Handy, Gio, GLib
+from gi.repository import Gtk, Gdk, Granite, Handy, Gio
 
 from gettext import gettext as _
 
@@ -61,6 +60,10 @@ class TurtleWindow(Handy.ApplicationWindow):
     exec_entry: Gtk.Entry = Gtk.Template.Child()
     terminal_entry: Gtk.CheckButton = Gtk.Template.Child()
     apps_listbox: Gtk.ListBox = Gtk.Template.Child()
+    appdata_revealer: Gtk.Revealer = Gtk.Template.Child()
+    appdata_name: Gtk.Label = Gtk.Template.Child()
+    appdata_terminal: Gtk.CheckButton = Gtk.Template.Child()
+    appdata_keywords: Gtk.Entry = Gtk.Template.Child()
     toast: Granite.WidgetsToast = Granite.WidgetsToast()
 
     # Path to selected executable
@@ -69,6 +72,7 @@ class TurtleWindow(Handy.ApplicationWindow):
     app_icon: str = ""
     app_terminal: bool = False
     desktop_file_path: str = None
+    appdata_current: Optional[AppData]
 
     def __init__(self, **kwargs):
         # Don't forget to initialize Handy!
@@ -93,6 +97,7 @@ class TurtleWindow(Handy.ApplicationWindow):
 
         self.apps_store = Gio.ListStore()
         self.apps_listbox.bind_model(self.apps_store, AppListRow)
+        self.apps_listbox.connect('row_activated', self.apps_listbox_row_selected)
         self.pages.connect("notify::visible-child", self.page_changed)
 
         # Init drag-n-drop
@@ -219,8 +224,6 @@ class TurtleWindow(Handy.ApplicationWindow):
             "Please choose an executable",
             self,
             Gtk.FileChooserAction.OPEN,
-            # _("_Select"),
-            # _("_Cancel"),
         )
 
         dialog.add_buttons(_("_Cancel"),
@@ -322,9 +325,57 @@ class TurtleWindow(Handy.ApplicationWindow):
     def page_changed(self, stack: Gtk.Stack, arg):
         if self.pages.get_visible_child_name() == 'installed_apps':
             self.load_available_apps()
+        else:
+            self.appdata_close()
 
     def load_available_apps(self):
         apps_folder = os.path.expanduser(APPS_PATH_PREFIX)
+        self.apps_store.remove_all()
         for file in sorted(os.listdir(apps_folder)):
             if file.endswith(".desktop"):
                 self.apps_store.append(AppData(os.path.join(apps_folder, file)))
+
+    def apps_listbox_row_selected(self, listbox: Gtk.ListBox, row: AppListRow):
+        self.appdata_revealer.set_reveal_child(True)
+        app_data = row.app_data
+        self.appdata_name.set_text(app_data.name)
+        self.appdata_terminal.set_active(app_data.terminal)
+        self.appdata_keywords.set_text(app_data.keywords)
+        self.appdata_current = app_data
+
+    @Gtk.Template.Callback()
+    def appdata_close_clicked(self, widget=None):
+        self.appdata_close()
+
+    def appdata_close(self):
+        self.appdata_revealer.set_reveal_child(False)
+        self.appdata_current = None
+
+    @Gtk.Template.Callback()
+    def appdata_open_clicked(self, widget):
+        self.open_external(self.appdata_current)
+
+    @Gtk.Template.Callback()
+    def appdata_delete_clicked(self, widget):
+        dlg: Granite.MessageDialog = Granite.MessageDialog.with_image_from_icon_name(
+            f"Remove {self.appdata_current.name} from AppMenu?",
+            "Be careful. This action is permanent.",
+            "dialog-warning",
+            Gtk.ButtonsType.CANCEL,
+        )
+
+        remove_btn = dlg.add_button("Remove", Gtk.ResponseType.ACCEPT)
+        remove_btn.get_style_context().add_class(Gtk.STYLE_CLASS_DESTRUCTIVE_ACTION)
+
+        response = dlg.run()
+        dlg.destroy()
+        if response == Gtk.ResponseType.ACCEPT:
+            os.remove(self.appdata_current.filepath)
+            self.load_available_apps()
+
+    def open_external(self, appdata: AppData):
+        file = Gio.File.new_for_path(path=appdata.filepath)
+        try:
+            Gtk.show_uri(None, file.get_uri(), Gtk.get_current_event_time())
+        except Exception as e:
+            print(e)

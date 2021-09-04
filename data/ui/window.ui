@@ -9,6 +9,11 @@
     <property name="pixel-size">128</property>
     <property name="icon-name">application-x-executable</property>
   </object>
+  <object class="GtkImage" id="image2">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">close</property>
+  </object>
   <template class="TurtleWindow" parent="HdyApplicationWindow">
     <property name="can-focus">False</property>
     <property name="default-width">400</property>
@@ -363,12 +368,127 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkRevealer">
+                      <object class="GtkRevealer" id="appdata_revealer">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="transition-type">none</property>
+                        <property name="transition-type">slide-up</property>
                         <child>
-                          <placeholder/>
+                          <!-- n-columns=2 n-rows=4 -->
+                          <object class="GtkGrid">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="margin-start">8</property>
+                            <property name="margin-end">8</property>
+                            <property name="margin-top">8</property>
+                            <property name="margin-bottom">8</property>
+                            <property name="row-spacing">8</property>
+                            <property name="column-spacing">8</property>
+                            <property name="column-homogeneous">True</property>
+                            <child>
+                              <object class="GtkCheckButton" id="appdata_terminal">
+                                <property name="label" translatable="yes">Open in Terminal</property>
+                                <property name="visible">True</property>
+                                <property name="can-focus">True</property>
+                                <property name="receives-default">False</property>
+                                <property name="draw-indicator">True</property>
+                              </object>
+                              <packing>
+                                <property name="left-attach">0</property>
+                                <property name="top-attach">1</property>
+                                <property name="width">2</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkBox">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <child>
+                                  <object class="GtkLabel" id="appdata_name">
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">False</property>
+                                    <property name="halign">start</property>
+                                    <property name="hexpand">True</property>
+                                    <property name="label" translatable="yes">Application Name</property>
+                                    <property name="ellipsize">middle</property>
+                                    <style>
+                                      <class name="h3"/>
+                                    </style>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkButton" id="appdata_close_button">
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">True</property>
+                                    <property name="receives-default">True</property>
+                                    <property name="image">image2</property>
+                                    <property name="relief">half</property>
+                                    <signal name="clicked" handler="appdata_close_clicked" swapped="no"/>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="left-attach">0</property>
+                                <property name="top-attach">0</property>
+                                <property name="width">2</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="appdata_keywords">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="halign">start</property>
+                                <property name="hexpand">True</property>
+                                <property name="label" translatable="yes">Keywords</property>
+                              </object>
+                              <packing>
+                                <property name="left-attach">0</property>
+                                <property name="top-attach">2</property>
+                                <property name="width">2</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkButton" id="appdata_edit_button">
+                                <property name="label" translatable="yes">Open in editor</property>
+                                <property name="visible">True</property>
+                                <property name="can-focus">True</property>
+                                <property name="receives-default">True</property>
+                                <signal name="clicked" handler="appdata_open_clicked" swapped="no"/>
+                                <style>
+                                  <class name="suggested-action"/>
+                                </style>
+                              </object>
+                              <packing>
+                                <property name="left-attach">0</property>
+                                <property name="top-attach">3</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkButton" id="appdata_delete_button">
+                                <property name="label" translatable="yes">Delete</property>
+                                <property name="visible">True</property>
+                                <property name="can-focus">True</property>
+                                <property name="receives-default">True</property>
+                                <signal name="clicked" handler="appdata_delete_clicked" swapped="no"/>
+                                <style>
+                                  <class name="destructive-action"/>
+                                </style>
+                              </object>
+                              <packing>
+                                <property name="left-attach">1</property>
+                                <property name="top-attach">3</property>
+                              </packing>
+                            </child>
+                          </object>
                         </child>
                       </object>
                       <packing>

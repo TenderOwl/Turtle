@@ -66,14 +66,37 @@ class AppData(GObject.GObject):
         return False
 
     @hidden.setter
-    def hidden(self, value):
+    def hidden(self, value) -> None:
         self.parser.set(DESKTOP_SECTION, 'Hidden', str(value).lower())
 
     @property
-    def icon(self) -> Optional[str]:
+    def terminal(self) -> bool:
+        if self.parser.has_option(DESKTOP_SECTION, 'Terminal'):
+            return self.parser.getboolean(DESKTOP_SECTION, 'Terminal')
+        return False
+
+    @terminal.setter
+    def terminal(self, value) -> None:
+        self.parser.set(DESKTOP_SECTION, 'Terminal', str(value).lower())
+
+    @property
+    def icon(self) -> str:
         if self.parser.has_option(DESKTOP_SECTION, 'Icon'):
             return self.parser.get(DESKTOP_SECTION, 'Icon')
         return ""
+
+    @property
+    def keywords(self) -> str:
+        if self.parser.has_option(DESKTOP_SECTION, 'Keywords'):
+            return self.parser.get(DESKTOP_SECTION, 'Keywords')
+        return ""
+
+    @keywords.setter
+    def keywords(self, value) -> None:
+        self.parser.set(DESKTOP_SECTION, 'Keywords', value)
+
+    def __repr__(self):
+        return f"{self.name}"
 
 
 @Gtk.Template(resource_path=f"{RESOURCE_PREFIX}/ui/widgets.ui")

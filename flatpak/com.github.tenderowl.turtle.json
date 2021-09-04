@@ -23,6 +23,9 @@
         "*.la",
         "*.a"
     ],
+    "x-run-args" : [
+        "~/Applications/Godot_v3.3.3-stable_x11.64"
+    ],
     "modules" : [
         {
             "name" : "turtle",
