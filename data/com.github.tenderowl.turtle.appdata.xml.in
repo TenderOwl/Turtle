@@ -26,6 +26,17 @@
     </screenshots>
 
     <releases>
+        <release version="0.2.0" timestamp="1630915407"  date="2021-09-06">
+            <description>
+                <p>Dark mode+</p>
+                 <ul>
+                    <li>Dark mode support</li>
+                    <li>Drag'n'Drop to add executables</li>
+                    <li>Turtle will ask for permission to allow execution if the selected app is no executable yet (644 -> 774)</li>
+                    <li>new buttons to open in the external editor or permanently remove from AppMenu</li>
+                </ul>
+            </description>
+        </release>
         <release version="0.1.5" timestamp="1630132049"  date="2021-08-28">
             <description>
                 <p>You can add new apps to the app menu or control visibility of added earlier.
