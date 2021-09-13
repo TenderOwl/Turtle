@@ -1,9 +1,10 @@
 [Desktop Entry]
 Name=Turtle
-Exec=turtle
+Exec=turtle %f
 Icon=com.github.tenderowl.turtle
 Terminal=false
 Type=Application
 Categories=GTK;
 StartupNotify=true
 Keywords=Add;Application;Entry;Menu;Edit;
+MimeType=!node;
